@@ -1,0 +1,12 @@
+{
+  "name": "Sonic Forage Infinite Radio",
+  "public_safe": true,
+  "features": [
+    "webgpu-check",
+    "web-audio-crossfade",
+    "prompt-queue",
+    "local-browser-synthesis",
+    "modal-backend-contract"
+  ],
+  "sample": "assets/tracks/sonic_forage_sa3_small_music_deep_echo_8s.mp3"
+}

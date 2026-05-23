@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sonic Forage Infinite Radio — WebGPU Prompt Queue</title>
+  <meta name="description" content="Browser-based endless prompt-queued music with Web Audio crossfades, WebGPU visual capability checks, and optional Modal generation backend." />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero panel">
+      <div class="eyebrow"><span id="gpuBadge">Checking WebGPU…</span><span>Web Audio crossfade engine</span><span>Modal-ready</span></div>
+      <h1>Sonic Forage Infinite Radio</h1>
+      <p class="lead">A public browser prototype for endless generated music: the current chunk plays, the next prompt cooks in the queue, then the deck crossfades into it.</p>
+      <div class="transport">
+        <button id="startBtn" class="primary">Start infinite radio</button>
+        <button id="stopBtn">Stop</button>
+        <button id="seedBtn">Queue deep echo sample</button>
+      </div>
+      <canvas id="viz" width="1200" height="320" aria-label="audio visualizer"></canvas>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Prompt next chunk</h2>
+        <label for="prompt">Music prompt</label>
+        <textarea id="prompt" rows="5">intergalactic healing bass, glassy synth plucks, slow cosmic pulse, no vocals, smooth loop, warm deep echo</textarea>
+        <div class="row">
+          <label>Duration <input id="duration" type="number" min="8" max="64" step="4" value="16"></label>
+          <label>Crossfade <input id="xfade" type="number" min="1" max="12" step="1" value="4"></label>
+          <label>Mood
+            <select id="mood">
+              <option>deep echo</option><option>festival bounce</option><option>ambient healing</option><option>alien lounge</option><option>dub techno</option>
+            </select>
+          </label>
+        </div>
+        <div class="transport">
+          <button id="queueLocal" class="primary">Generate local browser loop + queue</button>
+          <button id="queueModal">Try Modal backend</button>
+        </div>
+        <p class="note">Local mode uses deterministic Web Audio synthesis from the prompt so the demo works for everybody. Modal mode expects an API that returns <code>{ audio_url }</code> or <code>{ audio_base64 }</code>.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Modal backend</h2>
+        <label for="backend">Backend URL</label>
+        <input id="backend" placeholder="https://your-modal-app.modal.run/generate" />
+        <label for="apiKey">Optional admin key</label>
+        <input id="apiKey" type="password" placeholder="not stored unless you click save" />
+        <div class="transport">
+          <button id="saveBackend">Save backend locally</button>
+          <button id="clearBackend">Clear</button>
+        </div>
+        <ul class="status-list">
+          <li><b>Default public mode:</b> no secret, no surprise GPU spend.</li>
+          <li><b>Operator mode:</b> paste your Modal endpoint/key and queue real chunks.</li>
+          <li><b>Playback:</b> chunks are decoded in browser and crossfaded by Web Audio.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <h2>Now playing</h2>
+        <div id="now" class="bigStatus">Idle</div>
+        <div id="meters" class="meters"></div>
+      </div>
+      <div class="panel">
+        <h2>Queue</h2>
+        <ol id="queue" class="queue"></ol>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Build path</h2>
+      <div class="cards">
+        <article><h3>Browser</h3><p>WebGPU capability check + visual surface, Web Audio decoding/mixing, deterministic local prompt-synth fallback.</p></article>
+        <article><h3>Modal</h3><p>SA3/ACE/LMDM endpoint can return short MP3/WAV chunks. The frontend preloads the next chunk while the current chunk plays.</p></article>
+        <article><h3>Endless DJ</h3><p>Prompt queue → generate next → decode → schedule A/B deck crossfade → keep buffer 1–2 chunks ahead.</p></article>
+      </div>
+    </section>
+  </main>
+  <script src="./script.js"></script>
+</body>
+</html>
